@@ -1,6 +1,7 @@
+/// <reference types="vite/client" />
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css' // <-- CETTE LIGNE EST CRUCIALE
+import './index.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(

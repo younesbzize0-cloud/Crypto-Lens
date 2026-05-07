@@ -1,20 +1,26 @@
-import Header from "./components/Header";
-import { CryptosTable } from "./components/CryptosTable";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-const queryClient = new QueryClient();
+import Home from './pages/Home';
+import Simulation from './pages/Simulation';
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 5 * 60 * 1000,
+    },
+  },
+});
 
-function App () {
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="header">
-        <Header />
-      </div>
-      <main>
-        <CryptosTable />
-      </main>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/simulation" element={<Simulation />} />
+        </Routes>
+      </Router>
     </QueryClientProvider>
-  )
-  
+  );
 }
 
 export default App;
