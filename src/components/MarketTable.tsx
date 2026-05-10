@@ -8,13 +8,11 @@ interface Props {
   selectedId?: string;
 }
 
-const COLUMNS: { label: string; field?: SortField; sortable: boolean; className?: string }[] = [
-  { label: "#", field: "market_cap_rank", sortable: true },
-  { label: "Actif", sortable: false },
-  { label: "Prix", field: "current_price", sortable: true },
-  { label: "24h", field: "price_change_percentage_24h", sortable: true },
-  { label: "Mkt Cap", field: "market_cap", sortable: true, className: "hidden md:table-cell" },
-  { label: "Vol 24h", sortable: false, className: "hidden lg:table-cell" },
+const COLUMNS: { label: string; field: SortField }[] = [
+  { label: "#", field: "market_cap_rank" },
+  { label: "Prix", field: "current_price" },
+  { label: "24h", field: "price_change_percentage_24h" },
+  { label: "Mkt Cap", field: "market_cap" },
 ];
 
 export function MarketTable({ assets, onSelect, selectedId }: Props) {

@@ -80,7 +80,7 @@ export interface MarketChartData {
 
 // ─── API Response Types ────────────────────────────────────────────────────────
 
-export type CoinGeckoMarketResponse = CryptoAsset;
+export interface CoinGeckoMarketResponse extends CryptoAsset {}
 
 export interface ApiError {
   message: string;
