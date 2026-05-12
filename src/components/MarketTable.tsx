@@ -8,13 +8,6 @@ interface Props {
   selectedId?: string;
 }
 
-const COLUMNS: { label: string; field: SortField }[] = [
-  { label: "#", field: "market_cap_rank" },
-  { label: "Prix", field: "current_price" },
-  { label: "24h", field: "price_change_percentage_24h" },
-  { label: "Mkt Cap", field: "market_cap" },
-];
-
 export function MarketTable({ assets, onSelect, selectedId }: Props) {
   const [sort, setSort] = useState<MarketTableSort>({
     field: "market_cap_rank",

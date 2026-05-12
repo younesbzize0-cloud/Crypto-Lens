@@ -1,6 +1,5 @@
 import type {
   Position,
-  CryptoAsset,
   PnLResult,
   PortfolioSummaryData,
   Portfolio,
@@ -53,9 +52,8 @@ export function calcPortfolioSummary(
     (sum, { currentValue }) => sum + currentValue,
     0
   );
-  const totalPortfolioValue = totalInvestedValue + portfolio.remainingCash;
 
-  const enriched = positionsWithValues.map(({ position, currentValue }) => {
+  const enriched = positionsWithValues.map(({ position }) => {
     const currentPrice = priceMap[position.cryptoId] ?? position.avgBuyPrice;
     const pnl = calcPositionPnL(position, currentPrice, totalInvestedValue);
     return { ...position, ...pnl };
