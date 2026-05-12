@@ -35,5 +35,10 @@
     "typescript": "^6.0.3",
     "vite": "^6.0.0",
     "vitest": "^2.1.9"
+  },
+  "overrides": {
+    "vitest": {
+      "vite": "$vite"
+    }
   }
 }
