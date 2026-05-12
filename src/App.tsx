@@ -1,6 +1,18 @@
 import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TrendingUp, BarChart2, Bell, Settings, Plus, RefreshCw, Moon, Sun, Github, Linkedin } from "lucide-react";
+import { 
+  TrendingUp, 
+  BarChart2, 
+  Bell, 
+  Settings, 
+  Plus, 
+  RefreshCw, 
+  Moon, 
+  Sun, 
+  Zap,
+  Github,
+  Linkedin
+} from "lucide-react";
 
 import { MarketTable } from "./components/MarketTable";
 import { PortfolioSummary } from "./components/PortfolioSummary";
@@ -28,6 +40,7 @@ function Dashboard() {
   const [addOpen, setAddOpen] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
+  // Gestion du thème sur la balise <html> pour Tailwind v4
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -39,6 +52,7 @@ function Dashboard() {
   const { data: assets, isLoading, isError, error, dataUpdatedAt, refetch, isFetching } =
     useCryptoPrices();
 
+  // Active les alertes de prix
   usePriceAlerts(assets);
 
   const lastUpdated = dataUpdatedAt
@@ -57,8 +71,9 @@ function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-950 text-gray-100 font-sans transition-colors duration-300">
-      <header className="border-b border-gray-800 bg-gray-950/80 backdrop-blur-sm sticky top-0 z-40 transition-colors duration-300">
+    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${theme === 'dark' ? 'dark bg-gray-950 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+      
+      <header className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-yellow-500 rounded-lg flex items-center justify-center">
@@ -70,9 +85,9 @@ function Dashboard() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="p-2 rounded-xl bg-gray-800 text-gray-500 hover:text-yellow-500 transition-all border border-gray-800"
+              className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-yellow-500 transition-all border border-gray-200 dark:border-gray-800"
             >
-              {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
             {lastUpdated && (
@@ -80,6 +95,7 @@ function Dashboard() {
                 Mis à jour {lastUpdated}
               </span>
             )}
+            
             <button
               onClick={() => refetch()}
               disabled={isFetching}
@@ -87,6 +103,7 @@ function Dashboard() {
             >
               <RefreshCw size={15} className={isFetching ? "animate-spin" : ""} />
             </button>
+
             <button
               onClick={() => setAddOpen(true)}
               className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold text-xs px-3 py-1.5 rounded-lg transition-colors"
@@ -104,7 +121,7 @@ function Dashboard() {
               className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors
                 ${tab === t.id
                   ? "border-yellow-500 text-yellow-500"
-                  : "border-transparent text-gray-500 hover:text-gray-300"}`}
+                  : "border-transparent text-gray-500 hover:text-gray-300 dark:hover:text-gray-200"}`}
             >
               {t.icon} {t.label}
             </button>
@@ -119,55 +136,54 @@ function Dashboard() {
           </div>
         )}
 
-        {isLoading && (
+        {isLoading ? (
           <div className="space-y-3 animate-pulse">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-12 bg-gray-800 rounded-xl" />
+              <div key={i} className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl" />
             ))}
           </div>
-        )}
+        ) : (
+          <div className="animate-in fade-in duration-500">
+            {tab === "market" && (
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div className="xl:col-span-2">
+                  <MarketTable assets={assets ?? []} />
+                </div>
+                <div className="space-y-4">
+                  <PortfolioSummary />
+                  <PortfolioHistoryChart />
+                </div>
+              </div>
+            )}
 
-        {!isLoading && tab === "market" && (
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="xl:col-span-2">
-              <MarketTable assets={assets ?? []} />
-            </div>
-            <div className="space-y-4">
-              <PortfolioSummary />
-              <PortfolioHistoryChart />
-            </div>
-          </div>
-        )}
+            {tab === "portfolio" && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <PortfolioSummary />
+                  <PortfolioHistoryChart />
+                </div>
+                <PositionCard />
+              </div>
+            )}
 
-        {!isLoading && tab === "portfolio" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <PortfolioSummary />
-              <PortfolioHistoryChart />
-            </div>
-            <div>
-              <PositionCard />
-            </div>
-          </div>
-        )}
+            {tab === "alerts" && (
+              <div className="max-w-lg">
+                <PriceAlertManager />
+              </div>
+            )}
 
-        {!isLoading && tab === "alerts" && (
-          <div className="max-w-lg">
-            <PriceAlertManager />
-          </div>
-        )}
-
-        {!isLoading && tab === "settings" && (
-          <div className="max-w-sm">
-            <SimulationControls />
+            {tab === "settings" && (
+              <div className="max-w-sm">
+                <SimulationControls />
+              </div>
+            )}
           </div>
         )}
       </main>
 
       <AddPositionModal open={addOpen} onClose={() => setAddOpen(false)} />
 
-      {/* FOOTER CORRIGÉ : Plus de classes dark:xxx, on utilise nos couleurs globales */}
-      <footer className="border-t border-gray-800 bg-gray-950/50 backdrop-blur-sm transition-colors duration-300 mt-auto">
+      <footer className="border-t border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-950/50 backdrop-blur-sm transition-colors duration-300 mt-auto">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
           
           <div className="flex items-center gap-2">
@@ -179,26 +195,26 @@ function Dashboard() {
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             
-            {/* Profil 1 */}
-            <div className="flex items-center gap-3 bg-gray-800 border border-gray-800 rounded-xl p-1.5 transition-all shadow-sm">
-              <span className="text-sm font-bold text-gray-100 pl-3">
+            {/* Profil 1 - Younes B'zize */}
+            <div className="flex items-center gap-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-xl p-1.5 transition-all shadow-sm">
+              <span className="text-sm font-bold text-gray-900 dark:text-gray-100 pl-3">
                 Younes B'zize
               </span>
-              <div className="flex items-center gap-1 border-l border-gray-800 pl-2 pr-1">
+              <div className="flex items-center gap-1 border-l border-gray-200 dark:border-gray-800 pl-2 pr-1">
                 <a
                   href="https://github.com/younesbzize0-cloud"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-100 hover:bg-gray-950 transition-all"
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white dark:hover:bg-gray-950 transition-all"
                   title="GitHub"
                 >
                   <Github size={16} />
                 </a>
                 <a
-                  href="#" /* <-- Lien LinkedIn ici */
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-blue-500 hover:bg-gray-950 transition-all"
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-blue-500 hover:bg-white dark:hover:bg-gray-950 transition-all"
                   title="LinkedIn"
                 >
                   <Linkedin size={16} />
@@ -206,17 +222,17 @@ function Dashboard() {
               </div>
             </div>
 
-            {/* Profil 2 */}
-            <div className="flex items-center gap-3 bg-gray-800 border border-gray-800 rounded-xl p-1.5 transition-all shadow-sm">
-              <span className="text-sm font-bold text-gray-100 pl-3">
+            {/* Profil 2 - Deuxième Auteur */}
+            <div className="flex items-center gap-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-xl p-1.5 transition-all shadow-sm">
+              <span className="text-sm font-bold text-gray-900 dark:text-gray-100 pl-3">
                 Deuxième Auteur
               </span>
-              <div className="flex items-center gap-1 border-l border-gray-800 pl-2 pr-1">
+              <div className="flex items-center gap-1 border-l border-gray-200 dark:border-gray-800 pl-2 pr-1">
                 <a
                   href="#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-100 hover:bg-gray-950 transition-all"
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white dark:hover:bg-gray-950 transition-all"
                   title="GitHub"
                 >
                   <Github size={16} />
@@ -225,7 +241,7 @@ function Dashboard() {
                   href="#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-blue-500 hover:bg-gray-950 transition-all"
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-blue-500 hover:bg-white dark:hover:bg-gray-950 transition-all"
                   title="LinkedIn"
                 >
                   <Linkedin size={16} />
@@ -244,8 +260,6 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Dashboard />
-      <Dashboard />
     </QueryClientProvider>
   );
-  
 }
