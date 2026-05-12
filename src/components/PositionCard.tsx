@@ -1,10 +1,11 @@
-import { Trash2 } from "lucide-react";
+import { Banknote, Trash2 } from "lucide-react"; // Ajout de Banknote
 import { usePortfolioStore } from "../store/portfolioStore";
 import { usePnlCalculator } from "../hooks/usePnlCalculator";
 import { formatUSD, formatPct } from "../utils/pnl";
 
 export function PositionCard() {
   const removePosition = usePortfolioStore((s) => s.removePosition);
+  const sellPosition = usePortfolioStore((s) => s.sellPosition); // Récupération de l'action
   const summary = usePnlCalculator();
 
   if (summary.positions.length === 0) {
@@ -22,6 +23,10 @@ export function PositionCard() {
       </h3>
       {sorted.map((pos) => {
         const isPnlPositive = pos.absolutePnL >= 0;
+        
+        // On récupère le prix actuel via le summary (currentValue / quantity)
+        const currentPrice = pos.currentValue / pos.quantity;
+
         return (
           <div
             key={pos.id}
@@ -51,13 +56,26 @@ export function PositionCard() {
                 </span>
               </div>
             </div>
-            <button
-              onClick={() => removePosition(pos.id)}
-              title="Supprimer la position"
-              className="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-400 transition-all shrink-0"
-            >
-              <Trash2 size={16} />
-            </button>
+            
+            <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              {/* Nouveau Bouton Vendre */}
+              <button
+                onClick={() => sellPosition(pos.id, currentPrice)}
+                title="Vendre au prix du marché"
+                className="flex items-center justify-center p-2 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white rounded-lg transition-colors"
+              >
+                <Banknote size={16} />
+              </button>
+              
+              {/* Bouton Supprimer (gardé pour correction d'erreur) */}
+              <button
+                onClick={() => removePosition(pos.id)}
+                title="Supprimer sans vendre (annulation)"
+                className="flex items-center justify-center p-2 hover:bg-red-500/10 text-gray-600 hover:text-red-400 rounded-lg transition-colors"
+              >
+                <Trash2 size={14} />
+              </button>
+            </div>
           </div>
         );
       })}

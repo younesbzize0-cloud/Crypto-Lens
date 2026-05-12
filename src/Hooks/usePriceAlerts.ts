@@ -53,6 +53,7 @@ export function usePriceAlerts(prices: CryptoAsset[] | undefined) {
 
       if (hit) {
         markAlertTriggered(alert.id);
+        window.alert(`🚨 Alerte ${alert.symbol.toUpperCase()} !`);
         sendNotification(
           `🚨 Alerte ${alert.symbol.toUpperCase()}`,
           `${alert.name} est ${

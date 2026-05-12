@@ -18,6 +18,8 @@ interface PortfolioStore {
     positionId: string,
     data: Partial<Pick<Position, "quantity" | "avgBuyPrice">>
   ) => void;
+  sellPosition: (positionId: string, currentPrice: number) => void;
+
   resetPortfolio: (initialCapital: number) => void;
 
   // Alert actions
@@ -77,6 +79,22 @@ export const usePortfolioStore = create<PortfolioStore>()(
             },
           };
         }),
+
+        sellPosition: (positionId, currentPrice) =>
+          set((state) => {
+            const position = state.portfolio.positions.find((p) => p.id === positionId);
+            if (!position) return state;
+
+            const saleValue = position.quantity * currentPrice;
+
+            return {
+              portfolio: {
+                ...state.portfolio,
+                positions: state.portfolio.positions.filter((p) => p.id !== positionId),
+                remainingCash: state.portfolio.remainingCash + saleValue,
+              },
+            };
+          }),
 
       updatePosition: (positionId, data) =>
         set((state) => ({

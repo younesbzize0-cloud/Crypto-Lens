@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+@layer base {
+  /* MODE CLAIR : Cette section s'active UNIQUEMENT quand on n'est PAS en mode sombre.
+    En mode sombre (classe .dark), ce code est ignoré et ton thème original reste intact.
+  */
+  :root:not(.dark) {
+    /* 1. Inversion des Fonds (les fonds très foncés deviennent clairs) */
+    --color-gray-950: #f9fafb; /* Fond global de l'application (devient gris très clair) */
+    --color-gray-900: #ffffff; /* Fond des cartes et modales (devient blanc pur) */
+    --color-gray-800: #f3f4f6; /* Fond des inputs et des lignes au survol */
+    --color-gray-700: #e5e7eb; /* Bordures */
+
+    /* 2. Inversion des Textes (les textes très clairs deviennent foncés pour la lisibilité) */
+    --color-gray-100: #111827; /* Titres principaux et noms de cryptos (deviennent presque noirs) */
+    --color-gray-200: #1f2937; /* Valeurs en dollars et chiffres importants */
+    --color-gray-300: #374151; /* Textes intermédiaires */
+    --color-gray-400: #4b5563; /* Labels (ex: "Capital initial") */
+    --color-gray-500: #6b7280; /* Textes secondaires et en-têtes de tableau */
+    --color-gray-600: #9ca3af; /* Icônes désactivées et placeholders */
+  }
+
+  /* 3. Exception pour les boutons jaunes !
+    Ils utilisent "text-gray-900". Si on laisse faire, le texte deviendrait blanc en mode clair.
+    On force ce texte spécifique à rester foncé pour qu'il soit lisible sur le jaune.
+  */
+  :root:not(.dark) .text-gray-900 {
+    color: #111827 !important;
+  }
+
+  /* S'assure que le fond global prend bien la nouvelle couleur claire */
+  :root:not(.dark) body {
+    background-color: var(--color-gray-950);
+  }
+}
