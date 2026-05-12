@@ -114,13 +114,25 @@ function MetricCard({
   accent?: boolean;
 }) {
   return (
-    <div className="bg-gray-800/60 rounded-xl p-3">
-      <p className="text-gray-500 text-xs mb-1">{label}</p>
-      <p className={`font-mono font-bold text-sm ${accent ? "text-yellow-400" : "text-gray-100"}`}>
+    // 1. Added 'min-w-0' to allow the card to shrink smaller than its content
+    <div className="bg-gray-800/60 rounded-xl p-3 min-w-0">
+      <p className="text-gray-500 text-xs mb-1 truncate">{label}</p>
+      
+      {/* 2. Used 'text-xs' as default and 'sm:text-sm' for larger screens */}
+      {/* 3. Added 'truncate' to prevent the text from breaking the layout */}
+      <p 
+        className={`font-mono font-bold text-xs sm:text-sm truncate ${
+          accent ? "text-yellow-400" : "text-gray-100"
+        }`}
+        title={value} // Shows full value on hover
+      >
         {value}
       </p>
+      
       {sub && (
-        <p className={`text-xs font-semibold mt-0.5 ${positive ? "text-emerald-400" : "text-red-400"}`}>
+        <p className={`text-[10px] sm:text-xs font-semibold mt-0.5 truncate ${
+          positive ? "text-emerald-400" : "text-red-400"
+        }`}>
           {sub}
         </p>
       )}
