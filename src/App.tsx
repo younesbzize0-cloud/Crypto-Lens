@@ -40,19 +40,18 @@ function Dashboard() {
   const [addOpen, setAddOpen] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
-  // Gestion du thème sur la balise <html> pour Tailwind v4
   useEffect(() => {
+    const root = document.documentElement;
     if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
+      root.classList.add('dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.remove('dark');
     }
   }, [theme]);
 
   const { data: assets, isLoading, isError, error, dataUpdatedAt, refetch, isFetching } =
     useCryptoPrices();
 
-  // Active les alertes de prix
   usePriceAlerts(assets);
 
   const lastUpdated = dataUpdatedAt
@@ -71,27 +70,27 @@ function Dashboard() {
   ];
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${theme === 'dark' ? 'dark bg-gray-950 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${theme === 'dark' ? 'dark bg-gray-950 text-gray-100' : 'bg-gray-950 text-gray-100'}`}>
       
-      <header className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-40 transition-colors duration-300">
+      <header className="border-b border-gray-800 bg-gray-900 backdrop-blur-sm sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-yellow-500 rounded-lg flex items-center justify-center">
-              <TrendingUp size={14} className="text-gray-900" />
+            <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center shadow-lg shadow-yellow-500/20">
+              <Zap size={18} className="text-gray-900 fill-current" />
             </div>
-            <span className="font-bold tracking-tight">CryptoLens</span>
+            <span className="font-bold tracking-tight text-xl">CryptoLens</span>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-yellow-500 transition-all border border-gray-200 dark:border-gray-800"
+              className="p-2 rounded-xl bg-gray-800 text-gray-500 hover:text-yellow-500 transition-all border border-gray-800"
             >
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
             {lastUpdated && (
-              <span className="text-gray-500 text-xs hidden md:block">
+              <span className="text-gray-500 text-xs hidden md:block font-medium">
                 Mis à jour {lastUpdated}
               </span>
             )}
@@ -106,22 +105,22 @@ function Dashboard() {
 
             <button
               onClick={() => setAddOpen(true)}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold text-xs px-3 py-1.5 rounded-lg transition-colors"
+              className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold text-sm px-4 py-2 rounded-xl transition-all shadow-lg"
             >
-              <Plus size={13} /> Position
+              <Plus size={16} /> Position
             </button>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 flex gap-1 pb-0">
+        <div className="max-w-7xl mx-auto px-4 flex gap-1">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-bold border-b-2 transition-colors
                 ${tab === t.id
                   ? "border-yellow-500 text-yellow-500"
-                  : "border-transparent text-gray-500 hover:text-gray-300 dark:hover:text-gray-200"}`}
+                  : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"}`}
             >
               {t.icon} {t.label}
             </button>
@@ -129,27 +128,27 @@ function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-7xl w-full mx-auto px-4 py-6 flex-grow">
+      <main className="max-w-7xl w-full mx-auto px-4 py-8 flex-grow">
         {isError && (
-          <div className="mb-4 bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">
+          <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl px-4 py-3 text-red-600 font-bold text-sm">
             ⚠️ {parseApiError(error)}
           </div>
         )}
 
         {isLoading ? (
-          <div className="space-y-3 animate-pulse">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 dark:bg-gray-800 rounded-xl" />
+          <div className="space-y-4 animate-pulse">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-16 bg-gray-800 rounded-2xl" />
             ))}
           </div>
         ) : (
           <div className="animate-in fade-in duration-500">
             {tab === "market" && (
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 <div className="xl:col-span-2">
                   <MarketTable assets={assets ?? []} />
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <PortfolioSummary />
                   <PortfolioHistoryChart />
                 </div>
@@ -157,8 +156,8 @@ function Dashboard() {
             )}
 
             {tab === "portfolio" && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-6">
                   <PortfolioSummary />
                   <PortfolioHistoryChart />
                 </div>
@@ -167,13 +166,13 @@ function Dashboard() {
             )}
 
             {tab === "alerts" && (
-              <div className="max-w-lg">
+              <div className="max-w-xl">
                 <PriceAlertManager />
               </div>
             )}
 
             {tab === "settings" && (
-              <div className="max-w-sm">
+              <div className="max-w-md">
                 <SimulationControls />
               </div>
             )}
@@ -183,72 +182,31 @@ function Dashboard() {
 
       <AddPositionModal open={addOpen} onClose={() => setAddOpen(false)} />
 
-      <footer className="border-t border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-950/50 backdrop-blur-sm transition-colors duration-300 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
-            <p className="text-gray-500 text-sm font-medium text-center md:text-left">
+      <footer className="border-t border-gray-800 bg-gray-900 transition-colors duration-300 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-500 shadow-lg shadow-yellow-500/50"></span>
+            <p className="text-gray-500 text-sm font-bold">
               CryptoLens © {new Date().getFullYear()} — Créé par
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex items-center gap-3 bg-gray-800/50 border border-gray-800 rounded-2xl p-2 shadow-sm">
+              <span className="text-sm font-black text-gray-100 pl-2">Younes B'zize</span>
+              <div className="flex gap-1 border-l border-gray-800 pl-2">
+                <a href="https://github.com/younesbzize0-cloud" target="_blank" className="p-2 text-gray-500 hover:text-white transition-colors"><Github size={18} /></a>
+                <a href="#" className="p-2 text-gray-500 hover:text-blue-500 transition-colors"><Linkedin size={18} /></a>
+              </div>
+            </div>
             
-            {/* Profil 1 - Younes B'zize */}
-            <div className="flex items-center gap-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-xl p-1.5 transition-all shadow-sm">
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100 pl-3">
-                Younes B'zize
-              </span>
-              <div className="flex items-center gap-1 border-l border-gray-200 dark:border-gray-800 pl-2 pr-1">
-                <a
-                  href="https://github.com/younesbzize0-cloud"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white dark:hover:bg-gray-950 transition-all"
-                  title="GitHub"
-                >
-                  <Github size={16} />
-                </a>
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-blue-500 hover:bg-white dark:hover:bg-gray-950 transition-all"
-                  title="LinkedIn"
-                >
-                  <Linkedin size={16} />
-                </a>
+            <div className="flex items-center gap-3 bg-gray-800/50 border border-gray-800 rounded-2xl p-2 shadow-sm">
+              <span className="text-sm font-black text-gray-100 pl-2">Deuxième Auteur</span>
+              <div className="flex gap-1 border-l border-gray-800 pl-2">
+                <a href="#" className="p-2 text-gray-500 hover:text-white transition-colors"><Github size={18} /></a>
+                <a href="#" className="p-2 text-gray-500 hover:text-blue-500 transition-colors"><Linkedin size={18} /></a>
               </div>
             </div>
-
-            {/* Profil 2 - Deuxième Auteur */}
-            <div className="flex items-center gap-3 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-xl p-1.5 transition-all shadow-sm">
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100 pl-3">
-                Deuxième Auteur
-              </span>
-              <div className="flex items-center gap-1 border-l border-gray-200 dark:border-gray-800 pl-2 pr-1">
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-white dark:hover:bg-gray-950 transition-all"
-                  title="GitHub"
-                >
-                  <Github size={16} />
-                </a>
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-blue-500 hover:bg-white dark:hover:bg-gray-950 transition-all"
-                  title="LinkedIn"
-                >
-                  <Linkedin size={16} />
-                </a>
-              </div>
-            </div>
-
           </div>
         </div>
       </footer>

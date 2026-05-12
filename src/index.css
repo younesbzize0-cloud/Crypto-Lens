@@ -4,27 +4,51 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* On mappe les couleurs de tes composants sur des variables */
+  /* --- MAPPAGE DE COULEURS HAUTE LISIBILITÉ --- */
   --color-gray-950: var(--bg-main);
   --color-gray-900: var(--bg-card);
   --color-gray-800: var(--border-color);
+  
+  /* On force le blanc et le gris très clair à devenir NOIR en mode clair */
+  --color-white: var(--text-main);
   --color-gray-100: var(--text-main);
+  --color-gray-200: var(--text-main);
+  
+  /* On force le gris moyen à être très sombre pour être lisible */
+  --color-gray-400: var(--text-muted);
+  --color-gray-500: var(--text-muted);
+
+  /* ON REND LE VERT ET LE ROUGE LISIBLES SUR BLANC */
+  --color-emerald-400: var(--success-color);
+  --color-emerald-500: var(--success-color);
+  --color-red-400: var(--danger-color);
+  --color-red-500: var(--danger-color);
 }
 
 :root {
-  /* Mode CLAIR */
-  --bg-main: #f9fafb;      /* Fond de page */
-  --bg-card: #ffffff;      /* Cartes et Header */
-  --border-color: #e5e7eb;  /* Bordures */
-  --text-main: #111827;    /* Texte principal */
+  /* MODE CLAIR (Contraste Maximum) */
+  --bg-main: #f1f5f9;      /* Fond gris très léger */
+  --bg-card: #ffffff;      /* Cartes blanches */
+  --border-color: #94a3b8;  /* Bordures grises bien visibles */
+  --text-main: #000000;    /* Texte NOIR PUR */
+  --text-muted: #1e293b;   /* Texte secondaire presque noir */
+  
+  /* Couleurs de prix : vert et rouge très foncés pour le blanc */
+  --success-color: #166534; /* Vert sapin (emerald-800) */
+  --danger-color: #991b1b;  /* Rouge sang (red-800) */
 }
 
 .dark {
-  /* Mode SOMBRE */
-  --bg-main: #030712;      /* gray-950 original */
-  --bg-card: #111827;      /* gray-900 original */
-  --border-color: #1f2937;  /* gray-800 original */
-  --text-main: #f3f4f6;    /* gray-100 original */
+  /* MODE SOMBRE (Original) */
+  --bg-main: #030712;
+  --bg-card: #111827;
+  --border-color: #1f2937;
+  --text-main: #f3f4f6;    /* Retour au gris clair/blanc */
+  --text-muted: #9ca3af;
+  
+  /* Couleurs de prix : vert et rouge vifs pour le noir */
+  --success-color: #10b981; /* emerald-500 vif */
+  --danger-color: #ef4444;  /* red-500 vif */
 }
 
 @layer base {
