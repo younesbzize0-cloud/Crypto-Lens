@@ -1,58 +1,358 @@
 @import "tailwindcss";
 
-/* Configuration pour Tailwind v4 */
 @custom-variant dark (&:is(.dark *));
 
+/* ── Google Fonts ─────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;700;900&display=swap');
+
 @theme {
-  /* --- MAPPAGE DE COULEURS HAUTE LISIBILITÉ --- */
   --color-gray-950: var(--bg-main);
   --color-gray-900: var(--bg-card);
   --color-gray-800: var(--border-color);
-  
-  /* On force le blanc et le gris très clair à devenir NOIR en mode clair */
   --color-white: var(--text-main);
   --color-gray-100: var(--text-main);
   --color-gray-200: var(--text-main);
-  
-  /* On force le gris moyen à être très sombre pour être lisible */
   --color-gray-400: var(--text-muted);
   --color-gray-500: var(--text-muted);
-
-  /* ON REND LE VERT ET LE ROUGE LISIBLES SUR BLANC */
   --color-emerald-400: var(--success-color);
   --color-emerald-500: var(--success-color);
   --color-red-400: var(--danger-color);
   --color-red-500: var(--danger-color);
+  --color-yellow-400: var(--accent-color);
+  --color-yellow-500: var(--accent-color);
 }
 
+/* ══════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════ */
 :root {
-  /* MODE CLAIR (Contraste Maximum) */
-  --bg-main: #f1f5f9;      /* Fond gris très léger */
-  --bg-card: #ffffff;      /* Cartes blanches */
-  --border-color: #94a3b8;  /* Bordures grises bien visibles */
-  --text-main: #000000;    /* Texte NOIR PUR */
-  --text-muted: #1e293b;   /* Texte secondaire presque noir */
-  
-  /* Couleurs de prix : vert et rouge très foncés pour le blanc */
-  --success-color: #166534; /* Vert sapin (emerald-800) */
-  --danger-color: #991b1b;  /* Rouge sang (red-800) */
+  --bg-main:        #f0f4f8;
+  --bg-card:        #ffffff;
+  --border-color:   #94a3b8;
+  --text-main:      #0a0e1a;
+  --text-muted:     #334155;
+  --success-color:  #0d6e3f;
+  --danger-color:   #b91c1c;
+  --accent-color:   #d97706;
+
+  --glow-accent:    rgba(234, 179, 8, 0.18);
+  --glow-green:     rgba(16, 185, 129, 0.15);
+  --glow-red:       rgba(239, 68, 68, 0.15);
+
+  --font-ui:        'Exo 2', sans-serif;
+  --font-mono:      'Share Tech Mono', monospace;
+  --font-label:     'Rajdhani', sans-serif;
 }
 
 .dark {
-  /* MODE SOMBRE (Original) */
-  --bg-main: #030712;
-  --bg-card: #111827;
-  --border-color: #1f2937;
-  --text-main: #f3f4f6;    /* Retour au gris clair/blanc */
-  --text-muted: #9ca3af;
-  
-  /* Couleurs de prix : vert et rouge vifs pour le noir */
-  --success-color: #10b981; /* emerald-500 vif */
-  --danger-color: #ef4444;  /* red-500 vif */
+  --bg-main:        #020610;
+  --bg-card:        #080f1e;
+  --border-color:   #0f2040;
+  --text-main:      #e2eaf8;
+  --text-muted:     #5a7aaa;
+  --success-color:  #00ffaa;
+  --danger-color:   #ff4466;
+  --accent-color:   #f0c040;
+
+  --glow-accent:    rgba(240, 192, 64, 0.22);
+  --glow-green:     rgba(0, 255, 170, 0.12);
+  --glow-red:       rgba(255, 68, 102, 0.12);
 }
 
+/* ══════════════════════════════════════════
+   BASE
+══════════════════════════════════════════ */
 @layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
   body {
-    @apply bg-gray-950 text-gray-100 transition-colors duration-300 antialiased;
+    @apply bg-gray-950 text-gray-100 antialiased;
+    font-family: var(--font-ui);
+    transition: background-color 0.4s ease, color 0.4s ease;
+    overflow-x: hidden;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar               { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track         { background: var(--bg-main); }
+  ::-webkit-scrollbar-thumb         { background: var(--border-color); border-radius: 3px; }
+  .dark ::-webkit-scrollbar-thumb   { background: #0f2a50; }
+  .dark ::-webkit-scrollbar-thumb:hover { background: #1a3a6a; }
+
+  /* ── Selection ── */
+  ::selection { background: var(--glow-accent); color: var(--accent-color); }
+
+  /* ── Monospaced numbers everywhere ── */
+  [data-mono], .font-mono, td, th { font-family: var(--font-mono); }
 }
+
+/* ══════════════════════════════════════════
+   DARK-MODE ATMOSPHERIC BACKGROUND
+══════════════════════════════════════════ */
+.dark body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 40% at 15% 0%,  rgba(0,80,200,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 30% at 85% 100%, rgba(240,192,64,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 50% 50%,  rgba(0,30,80,0.4) 0%, transparent 100%);
+}
+
+/* Animated grid overlay (dark only) */
+.dark body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(0,100,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,100,255,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: grid-drift 30s linear infinite;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+}
+
+@keyframes grid-drift {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(48px); }
+}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+header {
+  position: relative;
+  z-index: 50;
+}
+
+/* Glowing bottom border on dark header */
+.dark header {
+  background: rgba(8, 15, 30, 0.85) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 100, 255, 0.15) !important;
+  box-shadow: 0 1px 0 rgba(0,100,255,0.08), 0 4px 32px rgba(0,0,0,0.6);
+}
+
+/* ── Logo icon pulse ── */
+.dark .logo-pulse {
+  animation: logo-pulse 3s ease-in-out infinite;
+}
+@keyframes logo-pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(240,192,64,0.4), 0 0 24px rgba(240,192,64,0.15); }
+  50%       { box-shadow: 0 0 20px rgba(240,192,64,0.7), 0 0 40px rgba(240,192,64,0.25); }
+}
+
+/* ── Nav tabs ── */
+.dark [data-tab-active="true"] {
+  text-shadow: 0 0 12px var(--accent-color);
+  position: relative;
+}
+.dark [data-tab-active="true"]::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color), 0 0 20px rgba(240,192,64,0.4);
+  border-radius: 1px 1px 0 0;
+}
+
+/* ── Refresh spin glow ── */
+.dark .animate-spin {
+  filter: drop-shadow(0 0 6px var(--accent-color));
+}
+
+/* ══════════════════════════════════════════
+   CARDS & SURFACES
+══════════════════════════════════════════ */
+.dark .bg-gray-900 {
+  background: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Futuristic card style */
+.dark [class*="rounded-2xl"],
+.dark [class*="rounded-xl"] {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle corner accents on cards (dark) */
+.dark [class*="rounded-2xl"]::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 24px; height: 24px;
+  border-top: 1px solid rgba(0,150,255,0.3);
+  border-left: 1px solid rgba(0,150,255,0.3);
+  pointer-events: none;
+  z-index: 1;
+}
+.dark [class*="rounded-2xl"]::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 24px; height: 24px;
+  border-bottom: 1px solid rgba(240,192,64,0.2);
+  border-right: 1px solid rgba(240,192,64,0.2);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+/* Primary CTA (yellow) */
+.dark .bg-yellow-500,
+.dark .hover\:bg-yellow-400:hover {
+  background: var(--accent-color) !important;
+  box-shadow: 0 0 16px rgba(240,192,64,0.35), 0 2px 8px rgba(0,0,0,0.4);
+  transition: all 0.2s ease;
+}
+.dark .bg-yellow-500:hover {
+  box-shadow: 0 0 28px rgba(240,192,64,0.6), 0 4px 16px rgba(0,0,0,0.5);
+  transform: translateY(-1px);
+}
+.dark .bg-yellow-500:active { transform: translateY(0); }
+
+/* Icon buttons */
+.dark .bg-gray-800 {
+  background: rgba(15, 32, 64, 0.8) !important;
+  border-color: rgba(0,100,255,0.15) !important;
+  transition: all 0.2s ease;
+}
+.dark .bg-gray-800:hover {
+  border-color: rgba(240,192,64,0.4) !important;
+  box-shadow: 0 0 12px rgba(240,192,64,0.15);
+}
+
+/* ══════════════════════════════════════════
+   TABLE
+══════════════════════════════════════════ */
+.dark table tr {
+  border-color: rgba(0, 80, 200, 0.1) !important;
+  transition: background 0.15s ease;
+}
+.dark table tr:hover {
+  background: rgba(0, 80, 200, 0.06) !important;
+  box-shadow: inset 0 0 0 1px rgba(0,100,255,0.08);
+}
+
+/* ══════════════════════════════════════════
+   TICKER BAR
+══════════════════════════════════════════ */
+.dark .ticker-bar {
+  background: rgba(4, 10, 24, 0.95);
+  border-color: rgba(0, 100, 255, 0.12) !important;
+  box-shadow: inset 0 -1px 0 rgba(0,100,255,0.05);
+  position: relative;
+}
+
+/* fade edges */
+.dark .ticker-bar::before,
+.dark .ticker-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 60px;
+  pointer-events: none;
+  z-index: 10;
+}
+.dark .ticker-bar::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(4,10,24,1), transparent);
+}
+.dark .ticker-bar::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(4,10,24,1), transparent);
+}
+
+/* ══════════════════════════════════════════
+   SUCCESS / DANGER GLOWS
+══════════════════════════════════════════ */
+.dark .text-emerald-400,
+.dark [class*="text-emerald"] {
+  color: var(--success-color) !important;
+  text-shadow: 0 0 8px rgba(0,255,170,0.4);
+}
+.dark .text-red-400,
+.dark [class*="text-red"] {
+  color: var(--danger-color) !important;
+  text-shadow: 0 0 8px rgba(255,68,102,0.4);
+}
+
+/* ══════════════════════════════════════════
+   INPUTS
+══════════════════════════════════════════ */
+.dark input, .dark select, .dark textarea {
+  background: rgba(4, 10, 24, 0.8) !important;
+  border-color: rgba(0, 80, 200, 0.25) !important;
+  color: var(--text-main) !important;
+  font-family: var(--font-mono);
+  transition: all 0.2s ease;
+}
+.dark input:focus, .dark select:focus, .dark textarea:focus {
+  border-color: rgba(240,192,64,0.5) !important;
+  box-shadow: 0 0 0 3px rgba(240,192,64,0.08), 0 0 16px rgba(240,192,64,0.1) !important;
+  outline: none;
+}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+.dark footer {
+  background: rgba(4, 10, 24, 0.9) !important;
+  border-color: rgba(0, 80, 200, 0.12) !important;
+  position: relative;
+}
+.dark footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0,150,255,0.2), rgba(240,192,64,0.15), transparent);
+}
+
+/* ══════════════════════════════════════════
+   LOADING SKELETON
+══════════════════════════════════════════ */
+.dark .animate-pulse > div {
+  background: linear-gradient(90deg,
+    rgba(8,20,50,1) 0%,
+    rgba(0,60,160,0.15) 50%,
+    rgba(8,20,50,1) 100%
+  ) !important;
+  background-size: 400% 100% !important;
+  animation: skeleton-scan 1.8s ease-in-out infinite !important;
+}
+@keyframes skeleton-scan {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* ══════════════════════════════════════════
+   FADE-IN ANIMATION
+══════════════════════════════════════════ */
+.animate-in.fade-in {
+  animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════
+   MODAL OVERLAY
+══════════════════════════════════════════ */
+.dark [role="dialog"],
+.dark .modal-overlay {
+  backdrop-filter: blur(12px) saturate(150%);
+  background: rgba(2, 6, 16, 0.85);
 }
