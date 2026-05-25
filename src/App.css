@@ -80,7 +80,7 @@
     padding: 32px;
     @media (max-width: 1024px) {
       padding: 24px 20px;
-    }
+  }
   }
 
   .icon {
