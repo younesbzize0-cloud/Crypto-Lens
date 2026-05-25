@@ -201,7 +201,7 @@ function Dashboard() {
             </div>
             
             <div className="flex items-center gap-3 bg-gray-800/50 border border-gray-800 rounded-2xl p-2 shadow-sm">
-              <span className="text-sm font-black text-gray-100 pl-2">Deuxième Auteur</span>
+              <span className="text-sm font-black text-gray-100 pl-2">Mohammed</span>
               <div className="flex gap-1 border-l border-gray-800 pl-2">
                 <a href="#" className="p-2 text-gray-500 hover:text-white transition-colors"><Github size={18} /></a>
                 <a href="#" className="p-2 text-gray-500 hover:text-blue-500 transition-colors"><Linkedin size={18} /></a>
