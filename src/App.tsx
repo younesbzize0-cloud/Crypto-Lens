@@ -24,6 +24,7 @@ import { SimulationControls } from "./components/SimulationControls";
 import { useCryptoPrices } from "./hooks/useCryptoPrices";
 import { usePriceAlerts } from "./hooks/usePriceAlerts";
 import { parseApiError } from "./lib/api";
+import { TickerBar } from "./components/TickerBar";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -128,6 +129,8 @@ function Dashboard() {
         </div>
       </header>
 
+      <TickerBar assets={assets ?? []} />
+      
       <main className="max-w-7xl w-full mx-auto px-4 py-8 flex-grow">
         {isError && (
           <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl px-4 py-3 text-red-600 font-bold text-sm">
